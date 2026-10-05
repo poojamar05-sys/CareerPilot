@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareerPilot — Your Tech Career, Mapped.</title>
+  <meta name="description" content="AI-powered career planning for college students entering tech.">
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
+  <style>
+    html { scroll-behavior: smooth; }
+    body {
+      background:
+        radial-gradient(circle at 10% 10%, rgba(99,102,241,.10), transparent 28%),
+        radial-gradient(circle at 90% 10%, rgba(34,211,238,.10), transparent 24%),
+        #ffffff;
+    }
+    .gradient-text {
+      background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 46%, #0891b2 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .mesh {
+      background-image:
+        linear-gradient(rgba(99,102,241,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,.05) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: linear-gradient(to bottom, black, transparent);
+    }
+    .focus-ring:focus {
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(99,102,241,.13);
+      border-color: rgba(99,102,241,.75);
+    }
+    .result-card { animation: fadeUp .55s ease-out both; }
+  </style>
+</head>
+
+<body class="min-h-screen text-slate-900">
+  <div class="fixed inset-x-0 top-0 z-50 border-b border-slate-200/70 bg-white/85 backdrop-blur-xl">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
+      <div class="flex items-center gap-3">
+        <div class="grid h-10 w-10 place-items-center rounded-2xl bg-slate-950 text-white shadow-lg shadow-slate-200">
+          <span class="text-lg font-black">C</span>
+        </div>
+        <div>
+          <div class="font-bold tracking-tight">CareerPilot</div>
+          <div class="text-[11px] font-medium text-slate-500">AI career co-pilot for students</div>
+        </div>
+      </div>
+      <div class="hidden items-center gap-2 text-xs font-semibold text-slate-500 sm:flex">
+        <span class="rounded-full border border-slate-200 bg-white px-3 py-1.5">Built for college → tech</span>
+      </div>
+    </div>
+  </div>
+
+  <main class="relative overflow-hidden pt-24">
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-[34rem] mesh"></div>
+
+    <section class="relative mx-auto max-w-6xl px-5 pb-12 pt-12 sm:pt-16">
+      <div class="mx-auto max-w-3xl text-center">
+        <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-indigo-100 bg-indigo-50 px-4 py-2 text-xs font-bold text-indigo-700">
+          <span class="h-2 w-2 animate-pulse rounded-full bg-indigo-500"></span>
+          PERSONALIZED • PRACTICAL • AI-POWERED
+        </div>
+
+        <h1 class="text-5xl font-black tracking-[-0.04em] sm:text-6xl md:text-7xl">
+          Your tech career,
+          <span class="gradient-text">mapped.</span>
+        </h1>
+
+        <p class="mx-auto mt-6 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
+          Tell us where you are and where you want to go. CareerPilot turns your student profile into a focused skill-gap analysis, project roadmap, and interview plan.
+        </p>
+
+        <div class="mt-8 flex flex-wrap justify-center gap-3 text-xs font-bold text-slate-600">
+          <span class="rounded-full bg-white px-4 py-2 shadow-sm ring-1 ring-slate-200">⚡ Fast AI analysis</span>
+          <span class="rounded-full bg-white px-4 py-2 shadow-sm ring-1 ring-slate-200">🎯 Role-focused roadmap</span>
+          <span class="rounded-full bg-white px-4 py-2 shadow-sm ring-1 ring-slate-200">🧩 Project ideas</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="relative mx-auto max-w-6xl px-5 pb-20">
+      <div class="grid gap-6 lg:grid-cols-[1.02fr_.98fr]">
+        <!-- INPUT CARD -->
+        <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-200/60 sm:p-8">
+          <div class="mb-7 flex items-start justify-between gap-4">
+            <div>
+              <p class="text-xs font-black uppercase tracking-[0.22em] text-indigo-600">01 · Your profile</p>
+              <h2 class="mt-2 text-2xl font-black tracking-tight">Start with where you are.</h2>
+              <p class="mt-2 text-sm leading-6 text-slate-500">No resume required. Just give the AI your current snapshot.</p>
+            </div>
+            <div class="hidden rounded-2xl bg-slate-50 px-3 py-2 text-right sm:block">
+              <div class="text-lg font-black">~30 sec</div>
+              <div class="text-[10px] font-bold uppercase tracking-wider text-slate-400">to generate</div>
+            </div>
+          </div>
+
+          <form id="careerForm" class="space-y-5">
+            <div class="grid gap-5 sm:grid-cols-2">
+              <label class="block">
+                <span class="mb-2 block text-sm font-bold text-slate-700">Name</span>
+                <input id="name" required maxlength="80" placeholder="e.g. Ananya"
+                  class="focus-ring w-full rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3.5 text-sm font-medium outline-none transition placeholder:text-slate-400">
+              </label>
+              <label class="block">
+                <span class="mb-2 block text-sm font-bold text-slate-700">Degree</span>
+                <input id="degree" required maxlength="120" placeholder="e.g. B.Tech CSE"
+                  class="focus-ring w-full rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3.5 text-sm font-medium outline-none transition placeholder:text-slate-400">
+              </label>
+            </div>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+              <label class="block">
+                <span class="mb-2 block text-sm font-bold text-slate-700">Current year</span>
+                <select id="year" required
+                  class="focus-ring w-full rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3.5 text-sm font-medium outline-none transition">
+                  <option value="">Select year</option>
+                  <option>1st year</option>
+                  <option>2nd year</option>
+                  <option>3rd year</option>
+                  <option>4th year</option>
+                  <option>Final year / graduated</option>
+                </select>
+              </label>
+              <label class="block">
+                <span class="mb-2 block text-sm font-bold text-slate-700">Target role</span>
+                <select id="targetRole" required
+                  class="focus-ring w-full rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3.5 text-sm font-medium outline-none transition">
+                  <option value="">Choose a role</option>
+                  <option>Software Engineer</option>
+                  <option>Frontend Developer</option>
+                  <option>Backend Developer</option>
+                  <option>Full-Stack Developer</option>
+                  <option>Data Analyst</option>
+                  <option>Data Scientist</option>
+                  <option>AI / ML Engineer</option>
+                  <option>Cloud / DevOps Engineer</option>
+                  <option>Cybersecurity Analyst</option>
+                  <option>Product / Tech Analyst</option>
+                </select>
+              </label>
+            </div>
+
+            <label class="block">
+              <span class="mb-2 block text-sm font-bold text-slate-700">Current skills</span>
+              <textarea id="skills" required maxlength="1000" rows="3"
+                placeholder="Python, HTML, CSS, JavaScript, SQL, Git..."
+                class="focus-ring w-full resize-none rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3.5 text-sm font-medium outline-none transition placeholder:text-slate-400"></textarea>
+            </label>
+
+            <label class="block">
+              <span class="mb-2 block text-sm font-bold text-slate-700">What is your career goal?</span>
+              <textarea id="goal" required maxlength="1000" rows="3"
+                placeholder="I want an internship by next semester and want to become job-ready for product companies."
+                class="focus-ring w-full resize-none rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3.5 text-sm font-medium outline-none transition placeholder:text-slate-400"></textarea>
+            </label>
+
+            <button id="submitBtn" type="submit"
+              class="group flex w-full items-center justify-center gap-3 rounded-2xl bg-slate-950 px-5 py-4 text-sm font-black text-white shadow-xl shadow-slate-300 transition hover:-translate-y-0.5 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70">
+              <span id="btnLabel">Generate my career plan</span>
+              <span id="spinner" class="hidden h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white"></span>
+              <span id="arrow" class="transition-transform group-hover:translate-x-1">→</span>
+            </button>
+
+            <div id="errorBox" class="hidden rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-700"></div>
+          </form>
+        </div>
+
+        <!-- PREVIEW / RESULTS -->
+        <div id="resultPanel" class="relative flex h-[620px] min-h-[620px] flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-950 p-6 text-white shadow-2xl shadow-slate-300/50 sm:p-8">
+          <div class="absolute -right-16 -top-16 h-52 w-52 animate-float rounded-full bg-indigo-500/20 blur-3xl"></div>
+          <div class="absolute -bottom-16 -left-16 h-52 w-52 rounded-full bg-cyan-400/10 blur-3xl"></div>
+
+          <div id="emptyState" class="relative flex min-h-[560px] flex-col items-center justify-center text-center">
+            <div class="grid h-20 w-20 animate-float place-items-center rounded-[1.7rem] bg-white/10 text-4xl ring-1 ring-white/10">✦</div>
+            <p class="mt-7 text-xs font-black uppercase tracking-[0.25em] text-indigo-300">02 · Your AI career cockpit</p>
+            <h2 class="mt-3 text-3xl font-black tracking-tight sm:text-4xl">Ready when you are.</h2>
+            <p class="mt-4 max-w-md text-sm leading-6 text-slate-400">
+              Your personalized dashboard will appear here with the skills to prioritize, portfolio projects to build, and an actionable roadmap.
+            </p>
+            <div class="mt-8 grid w-full max-w-md gap-3 sm:grid-cols-3">
+              <div class="rounded-2xl bg-white/[0.06] p-4 ring-1 ring-white/10">
+                <div class="text-xl">◎</div>
+                <div class="mt-2 text-xs font-bold text-slate-200">Readiness</div>
+              </div>
+              <div class="rounded-2xl bg-white/[0.06] p-4 ring-1 ring-white/10">
+                <div class="text-xl">↗</div>
+                <div class="mt-2 text-xs font-bold text-slate-200">Roadmap</div>
+              </div>
+              <div class="rounded-2xl bg-white/[0.06] p-4 ring-1 ring-white/10">
+                <div class="text-xl">◈</div>
+                <div class="mt-2 text-xs font-bold text-slate-200">Projects</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="loadingState" class="relative hidden min-h-[560px] flex-col items-center justify-center text-center">
+            <div class="h-16 w-16 animate-spin rounded-full border-4 border-white/10 border-t-indigo-400"></div>
+            <p class="mt-7 text-xs font-black uppercase tracking-[0.25em] text-indigo-300">Analyzing your profile</p>
+            <h2 class="mt-3 text-2xl font-black">Building your next moves...</h2>
+            <p class="mt-3 max-w-sm text-sm leading-6 text-slate-400">Matching your skills to your target role and turning gaps into a practical plan.</p>
+          </div>
+
+          <div id="results" class="relative hidden min-h-0 flex-1 space-y-6 overflow-y-auto overscroll-contain pr-2"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-6xl px-5 pb-16">
+      <div class="grid gap-4 md:grid-cols-3">
+        <div class="rounded-3xl border border-slate-200 bg-white p-6">
+          <div class="text-sm font-black text-slate-900">Built for students</div>
+          <p class="mt-2 text-sm leading-6 text-slate-500">Turns what you know today into a clear next-step plan.</p>
+        </div>
+        <div class="rounded-3xl border border-slate-200 bg-white p-6">
+          <div class="text-sm font-black text-slate-900">Portfolio-first</div>
+          <p class="mt-2 text-sm leading-6 text-slate-500">Prioritizes proof of skill through practical projects.</p>
+        </div>
+        <div class="rounded-3xl border border-slate-200 bg-white p-6">
+          <div class="text-sm font-black text-slate-900">Actionable by design</div>
+          <p class="mt-2 text-sm leading-6 text-slate-500">Every result ends with concrete actions you can start this week.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="border-t border-slate-200 bg-white">
+      <div class="mx-auto max-w-6xl px-5 py-8 text-center text-xs font-semibold text-slate-400">
+        CareerPilot · AI-assisted guidance, not a guarantee of employment.
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    const form = document.getElementById("careerForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const btnLabel = document.getElementById("btnLabel");
+    const spinner = document.getElementById("spinner");
+    const arrow = document.getElementById("arrow");
+    const errorBox = document.getElementById("errorBox");
+    const emptyState = document.getElementById("emptyState");
+    const loadingState = document.getElementById("loadingState");
+    const results = document.getElementById("results");
+
+    const escapeHTML = (value) =>
+      String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+    function setLoading(loading) {
+      submitBtn.disabled = loading;
+      spinner.classList.toggle("hidden", !loading);
+      arrow.classList.toggle("hidden", loading);
+      btnLabel.textContent = loading ? "Building your plan..." : "Generate my career plan";
+      emptyState.classList.toggle("hidden", loading);
+      loadingState.classList.toggle("hidden", !loading);
+    }
+
+    function renderList(items, className = "") {
+      return (items || []).map((item, index) => `
+        <div class="${className}">
+          <div class="flex gap-3">
+            <div class="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-lg bg-indigo-500/15 text-xs font-black text-indigo-300">${index + 1}</div>
+            <div class="text-sm leading-6 text-slate-300">${escapeHTML(item)}</div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderPlan(plan) {
+      const score = Math.max(0, Math.min(100, Number(plan.readiness_score) || 0));
+      const skills = (plan.priority_skills || []).map((s) => `
+        <div class="rounded-2xl bg-white/[0.06] p-4 ring-1 ring-white/10">
+          <div class="text-sm font-black text-white">${escapeHTML(s.skill)}</div>
+          <p class="mt-2 text-xs leading-5 text-slate-400">${escapeHTML(s.reason)}</p>
+        </div>
+      `).join("");
+
+      const roadmap = (plan.roadmap || []).map((phase) => `
+        <div class="rounded-2xl bg-white/[0.05] p-4 ring-1 ring-white/10">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="rounded-full bg-indigo-500/15 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-indigo-300">${escapeHTML(phase.phase)}</span>
+            <span class="text-sm font-black text-white">${escapeHTML(phase.title)}</span>
+          </div>
+          <div class="mt-4 space-y-3">${renderList(phase.tasks)}</div>
+        </div>
+      `).join("");
+
+      const projects = (plan.projects || []).map((project) => `
+        <div class="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+          <div class="text-sm font-black text-white">${escapeHTML(project.name)}</div>
+          <p class="mt-2 text-xs leading-5 text-slate-400">${escapeHTML(project.why)}</p>
+        </div>
+      `).join("");
+
+      results.innerHTML = `
+        <div class="result-card rounded-3xl bg-white/[0.06] p-5 ring-1 ring-white/10">
+          <div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p class="text-[10px] font-black uppercase tracking-[0.22em] text-indigo-300">AI assessment</p>
+              <h2 class="mt-2 text-2xl font-black tracking-tight">${escapeHTML(plan.headline)}</h2>
+              <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-400">${escapeHTML(plan.summary)}</p>
+            </div>
+            <div class="shrink-0 rounded-2xl bg-white/10 px-4 py-3 text-center ring-1 ring-white/10">
+              <div class="text-3xl font-black">${score}</div>
+              <div class="text-[9px] font-black uppercase tracking-wider text-slate-400">Readiness</div>
+            </div>
+          </div>
+
+          <div class="mt-5">
+            <div class="mb-2 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-slate-500">
+              <span>Current → target role</span>
+              <span class="text-slate-300">${escapeHTML(plan.target_role)}</span>
+            </div>
+            <div class="h-2 overflow-hidden rounded-full bg-white/10">
+              <div class="h-full rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-cyan-400 transition-all duration-1000" style="width:${score}%"></div>
+            </div>
+          </div>
+        </div>
+
+        <section class="result-card">
+          <div class="mb-3 flex items-center justify-between">
+            <h3 class="text-sm font-black">Priority skills</h3>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">What to close next</span>
+          </div>
+          <div class="grid gap-3 sm:grid-cols-2">${skills}</div>
+        </section>
+
+        <section class="result-card">
+          <div class="mb-3 flex items-center justify-between">
+            <h3 class="text-sm font-black">Your roadmap</h3>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">3 focused phases</span>
+          </div>
+          <div class="space-y-3">${roadmap}</div>
+        </section>
+
+        <section class="result-card">
+          <div class="mb-3">
+            <h3 class="text-sm font-black">Portfolio projects</h3>
+            <p class="mt-1 text-xs text-slate-500">Build proof, not just certificates.</p>
+          </div>
+          <div class="grid gap-3 sm:grid-cols-3">${projects}</div>
+        </section>
+
+        <section class="result-card grid gap-4 sm:grid-cols-2">
+          <div class="rounded-2xl bg-white/[0.04] p-4 ring-1 ring-white/10">
+            <div class="text-xs font-black uppercase tracking-wider text-indigo-300">Interview focus</div>
+            <div class="mt-4 space-y-3">${renderList(plan.interview_focus)}</div>
+          </div>
+          <div class="rounded-2xl bg-white/[0.04] p-4 ring-1 ring-white/10">
+            <div class="text-xs font-black uppercase tracking-wider text-cyan-300">Start this week</div>
+            <div class="mt-4 space-y-3">${renderList(plan.next_actions)}</div>
+          </div>
+        </section>
+
+        <button type="button" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+          class="w-full rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-xs font-bold text-slate-300 transition hover:bg-white/[0.08]">
+          ← Update my profile
+        </button>
+      `;
+
+      results.classList.remove("hidden");
+      emptyState.classList.add("hidden");
+      loadingState.classList.add("hidden");
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      errorBox.classList.add("hidden");
+      results.classList.add("hidden");
+      setLoading(true);
+
+      const payload = {
+        name: document.getElementById("name").value.trim(),
+        degree: document.getElementById("degree").value.trim(),
+        year: document.getElementById("year").value,
+        skills: document.getElementById("skills").value.trim(),
+        target_role: document.getElementById("targetRole").value,
+        goal: document.getElementById("goal").value.trim()
+      };
+
+      try {
+        const response = await fetch("/api/career-plan", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Something went wrong. Please try again.");
+        }
+
+        renderPlan(data.plan);
+      } catch (error) {
+        errorBox.textContent = error.message || "Could not generate your plan.";
+        errorBox.classList.remove("hidden");
+        emptyState.classList.remove("hidden");
+        loadingState.classList.add("hidden");
+      } finally {
+        setLoading(false);
+      }
+    });
+  </script>
+</body>
+</html>
